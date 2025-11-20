@@ -1,0 +1,25 @@
+19:36:07 **** Incremental Build of configuration Debug for project TCP_Stream_App ****
+make all 
+make --no-print-directory pre-build
+a9-linaro-pre-build-step
+' '
+make --no-print-directory main-build
+'Building file: ../src/echo.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/echo.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -IC:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/sw/UDP/freertos10_xilinx_ps7_cortexa9_0/bspinclude/include -MMD -MP -MF"src/echo.d" -MT"src/echo.o" -o "src/echo.o" "../src/echo.c"
+'Finished building: ../src/echo.c'
+' '
+'Building target: TCP_Stream_App.elf'
+'Invoking: ARM v7 gcc linker'
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -LC:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/sw/UDP/freertos10_xilinx_ps7_cortexa9_0/bsplib/lib -o "TCP_Stream_App.elf"  ./src/echo.o ./src/iic_phyreset.o ./src/main.o   -Wl,--start-group,-lxil,-lfreertos,-lgcc,-lc,--end-group -Wl,--start-group,-lxil,-llwip4,-lgcc,-lc,--end-group
+'Finished building target: TCP_Stream_App.elf'
+' '
+'Invoking: ARM v7 Print Size'
+arm-none-eabi-size TCP_Stream_App.elf  |tee "TCP_Stream_App.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+ 196325	   3412	7460928	7660665	 74e479	TCP_Stream_App.elf
+'Finished building: TCP_Stream_App.elf.size'
+' '
+
+19:36:08 Build Finished (took 1s.117ms)
+
