@@ -1,0 +1,318 @@
+/*
+ * zynq_tcp_video_forward.c
+ * Improved TCP video forwarder for Zynq-7020 (lwIP + FreeRTOS)
+ * - Handles binary header (8 bytes) from python tcp_video_server
+ * - Uses recv_all/send_all helpers to handle partial TCP reads/writes
+ * - Forwards chunks immediately while receiving (low latency)
+ * - Avoids strlen/strcpy on binary data (uses memcpy)
+ * - Protects shared receiver socket with a mutex
+ * - Cleans up on disconnects
+ * - NO DYNAMIC ALLOCATION - passes socket descriptors directly as void*
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "lwip/sockets.h"
+#include "netif/xadapter.h"
+#include "lwipopts.h"
+#include "xil_printf.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+//#include "sys/time.h"
+//#include <arpa/inet.h> // ntohl/ntohs
+
+#define THREAD_STACKSIZE                4096
+#define MAX_CONNECTIONS                 8
+#define HEADER_SIZE                     8     // 4 + 2 + 2 (frame_size, width, height)
+#define CHUNK_SIZE                      4096  // forward in 4KB chunks
+#define LISTEN_PORT                     5000
+
+static int listener_sock = -1;
+static int receiver_sd = -1; // socket of client who wants to receive frames
+static SemaphoreHandle_t receiver_mutex = NULL;
+
+/* Helper: receive exactly 'len' bytes or return -1 on error/disconnect */
+static int recv_all(int sd, void *buf, int len)
+{
+    int total = 0;
+    char *p = (char*)buf;
+    while (total < len) {
+        int n = recv(sd, p + total, len - total, 0);
+        if (n <= 0) {
+            return -1; // error or connection closed
+        }
+        total += n;
+    }
+    return total;
+}
+
+/* Helper: send all bytes */
+static int send_all(int sd, const void *buf, int len)
+{
+    int total = 0;
+    const char *p = (const char*)buf;
+    while (total < len) {
+        int n = send(sd, p + total, len - total, 0);
+        if (n <= 0) {
+            return -1;
+        }
+        total += n;
+    }
+    return total;
+}
+
+/* Thread that handles a "Sender" client (python script). It reads header+frame chunks and forwards to the receiver socket if available. */
+void SenderThread(void *arg)
+{
+    // Cast the void* back to int - no malloc needed!
+    int sd = (int)(intptr_t)arg;
+
+    xil_printf("[SenderThread] started for sd=%d\r\n", sd);
+
+    uint8_t header[HEADER_SIZE];
+
+    while (1) {
+        // Read header first (blocking until HEADER_SIZE bytes or error)
+        if (recv_all(sd, header, HEADER_SIZE) != HEADER_SIZE) {
+            xil_printf("[SenderThread] header recv failed or disconnected (sd=%d)\r\n", sd);
+            break;
+        }
+
+        // Parse header (network byte order)
+        uint32_t frame_size_net;
+        uint16_t width_net, height_net;
+        memcpy(&frame_size_net, header + 0, 4);
+        memcpy(&width_net, header + 4, 2);
+        memcpy(&height_net, header + 6, 2);
+
+        uint32_t frame_size = ntohl(frame_size_net);
+        uint16_t width = ntohs(width_net);
+        uint16_t height = ntohs(height_net);
+
+        // Basic sanity checks (prevent huge allocations)
+        if (frame_size == 0 || frame_size > (10*1024*1024)) { // 10MB cap
+            xil_printf("[SenderThread] invalid frame_size=%u\r\n", frame_size);
+            break;
+        }
+
+        // Now read the frame in CHUNK_SIZE parts and forward immediately
+        uint32_t remaining = frame_size;
+        uint8_t chunk_buf[CHUNK_SIZE];
+
+        // Before forwarding frame payload, we must forward the header to the receiver so the client stays in sync
+        // Lock receiver mutex to safely read receiver_sd
+        xSemaphoreTake(receiver_mutex, portMAX_DELAY);
+        int dest_sd = receiver_sd;
+        xSemaphoreGive(receiver_mutex);
+
+        if (dest_sd >= 0) {
+            // send header first
+            if (send_all(dest_sd, header, HEADER_SIZE) != HEADER_SIZE) {
+                xil_printf("[SenderThread] failed to send header to receiver (sd=%d)\r\n", dest_sd);
+                // consider clearing receiver socket
+                xSemaphoreTake(receiver_mutex, portMAX_DELAY);
+                close(receiver_sd);
+                receiver_sd = -1;
+                xSemaphoreGive(receiver_mutex);
+                dest_sd = -1;
+            }
+        }
+
+        while (remaining > 0) {
+            int to_read = (remaining > CHUNK_SIZE) ? CHUNK_SIZE : remaining;
+            if (recv_all(sd, chunk_buf, to_read) != to_read) {
+                xil_printf("[SenderThread] frame payload recv failed/disconnected (sd=%d)\r\n", sd);
+                remaining = 0; // exit outer loop
+                break;
+            }
+
+            // forward to receiver if present
+            if (dest_sd >= 0) {
+                if (send_all(dest_sd, chunk_buf, to_read) != to_read) {
+                    xil_printf("[SenderThread] failed to forward chunk to receiver (sd=%d)\r\n", dest_sd);
+                    // drop receiver
+                    xSemaphoreTake(receiver_mutex, portMAX_DELAY);
+                    close(receiver_sd);
+                    receiver_sd = -1;
+                    xSemaphoreGive(receiver_mutex);
+                    dest_sd = -1;
+                }
+            }
+
+            remaining -= to_read;
+        }
+
+        // completed one frame; loop to read next header
+    }
+
+    // cleanup on disconnect
+    xil_printf("[SenderThread] cleaning up sd=%d\r\n", sd);
+    close(sd);
+    vTaskDelete(NULL);
+}
+
+/* Thread that handles a "Receiver" client. It simply holds the receiver_sd and monitors disconnect. */
+void ReceiverThread(void *arg)
+{
+    // Cast the void* back to int - no malloc needed!
+    int sd = (int)(intptr_t)arg;
+
+    xil_printf("[ReceiverThread] started for sd=%d\r\n", sd);
+
+    // register this socket as the active receiver
+    xSemaphoreTake(receiver_mutex, portMAX_DELAY);
+    if (receiver_sd >= 0) {
+        // already have a receiver — refuse this connection
+        xil_printf("[ReceiverThread] another receiver already connected, closing sd=%d\r\n", sd);
+        xSemaphoreGive(receiver_mutex);
+        close(sd);
+        vTaskDelete(NULL);
+        return;
+    }
+    receiver_sd = sd;
+    xSemaphoreGive(receiver_mutex);
+
+    // Wait for client to disconnect. We can recv 0 bytes in blocking mode by checking recv() with MSG_PEEK or just do a loop with small recv
+    // We'll use recv with MSG_PEEK to detect closure in a simple loop.
+    char peek;
+    while (1) {
+        int n = recv(sd, &peek, 1, MSG_PEEK);
+        if (n == 0) {
+            // orderly shutdown by peer
+            xil_printf("[ReceiverThread] receiver disconnected (sd=%d)\r\n", sd);
+            break;
+        } else if (n < 0) {
+            // error; we treat as disconnect
+            xil_printf("[ReceiverThread] recv error/closed (sd=%d)\r\n", sd);
+            break;
+        }
+        // sleep a bit to avoid busy looping
+        vTaskDelay(pdMS_TO_TICKS(200));
+    }
+
+    // unregister receiver
+    xSemaphoreTake(receiver_mutex, portMAX_DELAY);
+    if (receiver_sd == sd) {
+        receiver_sd = -1;
+    }
+    xSemaphoreGive(receiver_mutex);
+
+    close(sd);
+    xil_printf("[ReceiverThread] exiting for sd=%d\r\n", sd);
+    vTaskDelete(NULL);
+}
+
+/* Connection thread: gets a new connected socket and queries the client for its role ("Sender" or "Recv"). */
+void ConnectionThread(void *p)
+{
+    // Cast the void* back to int - no malloc needed!
+    int sd = (int)(intptr_t)p;
+
+    xil_printf("[ConnectionThread] new connection sd=%d\r\n", sd);
+
+    const char *welcome = "Type 'Sender' to stream camera, or 'Recv' to receive video\r\n";
+    send(sd, welcome, strlen(welcome), 0);
+
+    // read small command from client (we expect ASCII text)
+    char cmdbuf[16] = {0};
+    int n = recv(sd, cmdbuf, sizeof(cmdbuf)-1, 0);
+    if (n <= 0) {
+        xil_printf("[ConnectionThread] read cmd failed sd=%d\r\n", sd);
+        close(sd);
+        vTaskDelete(NULL);
+        return;
+    }
+    // remove newline if present
+    for (int i = 0; i < n; ++i) {
+        if (cmdbuf[i] == '\r' || cmdbuf[i] == '\n') { cmdbuf[i] = '\0'; break; }
+    }
+
+    if (strncmp(cmdbuf, "Sender", 6) == 0) {
+        xil_printf("[ConnectionThread] creating SenderThread for sd=%d\r\n", sd);
+        // Pass socket descriptor directly - no malloc!
+        sys_thread_new("SenderThread", SenderThread, (void*)(intptr_t)sd,
+                       THREAD_STACKSIZE, tskIDLE_PRIORITY + 2);
+    } else if (strncmp(cmdbuf, "Recv", 4) == 0) {
+        xil_printf("[ConnectionThread] creating ReceiverThread for sd=%d\r\n", sd);
+        // Pass socket descriptor directly - no malloc!
+        sys_thread_new("ReceiverThread", ReceiverThread, (void*)(intptr_t)sd,
+                       THREAD_STACKSIZE, tskIDLE_PRIORITY + 2);
+    } else {
+        const char *bad = "Unknown command. Closing.\r\n";
+        send(sd, bad, strlen(bad), 0);
+        close(sd);
+    }
+
+    vTaskDelete(NULL);
+}
+
+void tcp_video_server_thread(void *p)
+{
+    struct sockaddr_in address, remote;
+    int size = sizeof(remote);
+
+    // create mutex
+    receiver_mutex = xSemaphoreCreateMutex();
+    if (!receiver_mutex) {
+        xil_printf("Failed to create receiver mutex\r\n");
+        vTaskDelete(NULL);
+        return;
+    }
+
+    // create listener
+    listener_sock = lwip_socket(AF_INET, SOCK_STREAM, 0);
+    if (listener_sock < 0) {
+        xil_printf("failed to create socket\r\n");
+        vTaskDelete(NULL);
+        return;
+    }
+
+    memset(&address, 0, sizeof(address));
+    address.sin_family = AF_INET;
+    address.sin_port = htons(LISTEN_PORT);
+    address.sin_addr.s_addr = INADDR_ANY;
+
+    if (lwip_bind(listener_sock, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        xil_printf("bind failed\r\n");
+        close(listener_sock);
+        vTaskDelete(NULL);
+        return;
+    }
+
+    if (lwip_listen(listener_sock, 4) < 0) {
+        xil_printf("listen failed\r\n");
+        close(listener_sock);
+        vTaskDelete(NULL);
+        return;
+    }
+
+    xil_printf("TCP video forwarder listening on port %d\r\n", LISTEN_PORT);
+
+    while (1) {
+        int sd = lwip_accept(listener_sock, (struct sockaddr*)&remote, (socklen_t*)&size);
+        if (sd < 0) {
+            vTaskDelay(pdMS_TO_TICKS(100));
+            continue;
+        }
+        xil_printf("Accepted connection sd=%d\r\n", sd);
+        // Pass socket descriptor directly - no malloc!
+        sys_thread_new("ConnectionThread", ConnectionThread, (void*)(intptr_t)sd,
+                       THREAD_STACKSIZE, tskIDLE_PRIORITY + 1);
+    }
+}
+
+/* Entry point: create the server thread */
+void start_tcp_video_forwarder()
+{
+    sys_thread_new("tcp_video_server", tcp_video_server_thread, NULL,
+                   THREAD_STACKSIZE, tskIDLE_PRIORITY + 1);
+}
+
+/* Optionally call start_tcp_video_forwarder() from your board init code. */
+
+/* End of file */

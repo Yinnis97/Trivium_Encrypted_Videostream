@@ -9,9 +9,7 @@
 #include "xil_printf.h"
 #include "FreeRTOS.h"
 #include "task.h"
-
-#define SEND_ONE_FRAME
-//#define SEND_THREE_FRAMES
+#include "semphr.h"
 
 #define THREAD_STACKSIZE 				1024
 #define MAX_CONNECTIONS 				8
@@ -20,26 +18,18 @@
 #define FRAME_BUFFER_SIZE_BYTES			(PIXEL_SIZE_BYTES * FRAME_RESOLUTION)  	// Width * Height * RGB //2048
 #define FRAME_AMOUNT					3
 
-
 int new_sd[MAX_CONNECTIONS];
 int connection_index;
-sys_thread_t Send_Thread_Handle;
 _Bool Send_Data = false;
-char Send_Packet_3_Frames[FRAME_BUFFER_SIZE_BYTES*3];
-char Send_Packet_1_Frame[FRAME_BUFFER_SIZE_BYTES];
+char Send_Packet[FRAME_BUFFER_SIZE_BYTES];
 u16_t echo_port = 7;
+SemaphoreHandle_t buffer_mutex;
+char recv_buf[FRAME_BUFFER_SIZE_BYTES];
+char send_buf[FRAME_BUFFER_SIZE_BYTES];
 
 void Connection_Thread(void *p);
 void Send_Thread(void *p);
 void Recv_Thread(void *p);
-
-void print_echo_app_header()
-{
-    xil_printf("%20s %6d %s\r\n", "echo server",
-                        echo_port,
-                        "$ telnet <board_ip> 7");
-
-}
 
 void Connection_Thread(void *p)
 {
@@ -66,7 +56,7 @@ void Connection_Thread(void *p)
 
 			if(strcmp(recv_buf,"Sender") == 0)
 			{
-				printf("Creating Sender Thread for %d",sd);
+				printf("Creating Sender Thread for %d\r\n",sd);
 
 				sys_thread_new("Recv Thread", Recv_Thread,
 								(void*)&sd,
@@ -76,7 +66,7 @@ void Connection_Thread(void *p)
 			}
 			else if(strcmp(recv_buf,"Recv") == 0)
 			{
-				printf("Creating Receiver Thread for %d",sd);
+				printf("Creating Receiver Thread for %d\r\n",sd);
 
 				sys_thread_new("Sender Thread", Send_Thread,
 								(void*)&sd,
@@ -107,24 +97,19 @@ void Send_Thread(void *p)
 
 	while(1)
 	{
-#ifdef SEND_ONE_FRAME
 		if(Send_Data)
 		{
+			// Lock mutex and copy data to local buffer
+			if(xSemaphoreTake(buffer_mutex, portMAX_DELAY) == pdTRUE)
+			{
+				memcpy(send_buf, Send_Packet, FRAME_BUFFER_SIZE_BYTES);
+				xSemaphoreGive(buffer_mutex);
+			}
+
 			//printf("Sending Data to socket %d",sd);
-			size_t len = strlen(Send_Packet_1_Frame);
-			send(sd,Send_Packet_1_Frame,len,0);
+			send(sd,send_buf,FRAME_BUFFER_SIZE_BYTES,0);
 			Send_Data = false;
 		}
-#endif
-#ifdef SEND_THREE_FRAMES
-		if(Send_Data)
-		{
-			//printf("Sending Data to socket %d",sd);
-			size_t len = strlen(Send_Packet_3_Frames);
-			send(sd,Send_Packet_3_Frames,len,0);
-			Send_Data = false;
-		}
-#endif
 	}
 
 	close(sd);
@@ -138,93 +123,32 @@ void Recv_Thread(void *p)
 	int sd = *(int *)p;
 	int n;
 
-#ifdef SEND_THREE_FRAMES
-	char recv_buf_3frames[FRAME_BUFFER_SIZE_BYTES*FRAME_AMOUNT];
-	static int recv_buff_index = 0;
-#endif
-#ifdef SEND_ONE_FRAME
-	char recv_buf_1frame[FRAME_BUFFER_SIZE_BYTES];
-#endif
-
 	while (1)
 	{
-#ifdef SEND_THREE_FRAMES
-		// Sending 3 frames at a time
-		/* read a max of RECV_BUF_SIZE_BYTES from socket */
-		if ((n = read(sd, (recv_buf_3frames + recv_buff_index), FRAME_BUFFER_SIZE_BYTES)) < 0)
+		// Receive complete frame - TCP may split it into multiple packets
+		int total_received = 0;
+		while(total_received < FRAME_BUFFER_SIZE_BYTES)
 		{
-			xil_printf("%s: error reading from socket %d, closing socket\r\n", __FUNCTION__, sd);
-			break;
-		}
-		else
-		{
-			recv_buff_index = recv_buff_index +  FRAME_BUFFER_SIZE_BYTES;
+			n = read(sd, recv_buf + total_received, FRAME_BUFFER_SIZE_BYTES - total_received);
+
+			if (n < 0)
+			{
+				xil_printf("%s: error reading from socket %d\r\n", __FUNCTION__, sd);
+			}
+			else if (n == 0)
+			{
+				xil_printf("%s: connection closed by client\r\n", __FUNCTION__);
+			}
+
+			total_received += n;
 		}
 
-		if(recv_buff_index == ( FRAME_BUFFER_SIZE_BYTES * 3 ))
+		if(xSemaphoreTake(buffer_mutex, portMAX_DELAY) == pdTRUE)
 		{
+			memcpy(Send_Packet, recv_buf, FRAME_BUFFER_SIZE_BYTES);
 			Send_Data = true;
-			recv_buff_index = 0;
-			strcpy(Send_Packet_3_Frames,recv_buf);
+			xSemaphoreGive(buffer_mutex);
 		}
-#endif
-
-#ifdef SEND_ONE_FRAME
-		// sending 1 frame at a time
-		if ((n = read(sd, recv_buf_1frame, FRAME_BUFFER_SIZE_BYTES)) < 0)
-		{
-			xil_printf("%s: error reading from socket %d, closing socket\r\n", __FUNCTION__, sd);
-			break;
-		}
-		else
-		{
-			Send_Data = true;
-			strcpy(Send_Packet_1_Frame,recv_buf_1frame);
-		}
-#endif
-		/* break if client closed connection */
-		if (n <= 0)
-			break;
-	}
-
-	/* close connection */
-	close(sd);
-	vTaskDelete(NULL);
-}
-
-/* thread spawned for each connection */
-void process_echo_request(void *p)
-{
-	int sd = *(int *)p;
-	char recv_buf[FRAME_BUFFER_SIZE_BYTES+1];
-	recv_buf[FRAME_BUFFER_SIZE_BYTES] = '\n';
-	int n;
-	int frames_read = 0;
-
-	while (1)
-	{
-		/* read a max of RECV_BUF_SIZE bytes from socket */
-		if ((n = read(sd, recv_buf, FRAME_BUFFER_SIZE_BYTES)) < 0)
-		{
-			xil_printf("%s: error reading from socket %d, closing socket\r\n", __FUNCTION__, sd);
-			break;
-		}
-		else
-		{
-			xil_printf("\r\n");
-			xil_printf("--------- FRAME COMPLETED ---------\r\n");
-			frames_read++;
-		}
-
-		if(frames_read >= FRAME_AMOUNT)
-		{
-			xil_printf("Read %d frames",frames_read);
-			break;
-		}
-
-		/* break if the recved message = "quit" */
-		if (!strncmp(recv_buf, "quit", 4))
-			break;
 
 		/* break if client closed connection */
 		if (n <= 0)
@@ -236,10 +160,18 @@ void process_echo_request(void *p)
 	vTaskDelete(NULL);
 }
 
-void echo_application_thread()
+void listen_thread()
 {
 	int sock;
 	int size;
+
+	// Create mutex for buffer protection
+	buffer_mutex = xSemaphoreCreateMutex();
+	if(buffer_mutex == NULL)
+	{
+		xil_printf("Failed to create mutex\r\n");
+		return;
+	}
 
 	struct sockaddr_in address, remote;
 
@@ -268,11 +200,6 @@ void echo_application_thread()
 				(void*)&(new_sd[connection_index]),
 				THREAD_STACKSIZE,
 				2);
-
-//			sys_thread_new("echos", Recv_Thread,
-//				(void*)&(new_sd[connection_index]),
-//				THREAD_STACKSIZE,
-//				DEFAULT_THREAD_PRIO);
 			if (++connection_index>= MAX_CONNECTIONS)
 			{
 				break;

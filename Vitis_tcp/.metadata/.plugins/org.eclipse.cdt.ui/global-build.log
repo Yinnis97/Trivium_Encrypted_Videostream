@@ -1,6 +1,6 @@
 Nothing to build in platform 'UDP'
 
-19:36:07 **** Incremental Build of configuration Debug for project TCP_Stream_App ****
+16:14:34 **** Incremental Build of configuration Debug for project TCP_Stream_App ****
 make all 
 make --no-print-directory pre-build
 a9-linaro-pre-build-step
@@ -19,6 +19,6 @@ arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=non
 'Invoking: ARM v7 Print Size'
 arm-none-eabi-size TCP_Stream_App.elf  |tee "TCP_Stream_App.elf.size"
    text	   data	    bss	    dec	    hex	filename
- 196325	   3412	7460928	7660665	 74e479	TCP_Stream_App.elf
+ 196029	   3412	7460928	7660369	 74e351	TCP_Stream_App.elf
 'Finished building: TCP_Stream_App.elf.size'
 ' '

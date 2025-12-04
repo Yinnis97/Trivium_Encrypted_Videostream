@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;TCP_Stream_App/src/Tcp_Stream.c&apos;" deleteContents="false" description="Delete resource &apos;TCP_Stream_App/src/Tcp_Stream.c&apos;" element1="/TCP_Stream_App/src/Tcp_Stream.c" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1763981979471"/>&#x0A;<refactoring comment="Delete resource &apos;TCP_Stream_App/src/Tcp_Stream.h&apos;" deleteContents="false" description="Delete resource &apos;TCP_Stream_App/src/Tcp_Stream.h&apos;" element1="/TCP_Stream_App/src/Tcp_Stream.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1763981985243"/>
+</session>

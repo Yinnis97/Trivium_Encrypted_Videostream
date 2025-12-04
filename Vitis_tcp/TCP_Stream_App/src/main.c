@@ -9,34 +9,35 @@
 #include "lwip/dhcp.h"
 #endif
 
+// Functions
 int main_thread();
-void print_echo_app_header();
-void echo_application_thread(void *);
-
+void listen_thread(void *);
 void lwip_init();
 
+// DHCP
 #if LWIP_IPV6==0
-#if LWIP_DHCP==1
-extern volatile int dhcp_timoutcntr;
-err_t dhcp_start(struct netif *netif);
-#endif
+	#if LWIP_DHCP==1
+	extern volatile int dhcp_timoutcntr;
+	err_t dhcp_start(struct netif *netif);
+	#endif
 #endif
 
+// Thread Stack Size
 #define THREAD_STACKSIZE 1024
 
+// LWIP data structure
 static struct netif server_netif;
 struct netif *echo_netif;
 
-void
-print_ip(char *msg, ip_addr_t *ip)
+
+void print_ip(char *msg, ip_addr_t *ip)
 {
 	xil_printf(msg);
 	xil_printf("%d.%d.%d.%d\n\r", ip4_addr1(ip), ip4_addr2(ip),
 			ip4_addr3(ip), ip4_addr4(ip));
 }
 
-void
-print_ip_settings(ip_addr_t *ip, ip_addr_t *mask, ip_addr_t *gw)
+void print_ip_settings(ip_addr_t *ip, ip_addr_t *mask, ip_addr_t *gw)
 {
 
 	print_ip("Board IP: ", ip);
@@ -128,38 +129,41 @@ int main_thread()
 
 #if LWIP_IPV6==0
 #if LWIP_DHCP==1
-    while (1) {
+    while (1)
+    {
 	vTaskDelay(DHCP_FINE_TIMER_MSECS / portTICK_RATE_MS);
-		if (server_netif.ip_addr.addr) {
+		if (server_netif.ip_addr.addr)
+		{
 			xil_printf("DHCP request success\r\n");
 			print_ip_settings(&(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
-			//print_echo_app_header();
-			//xil_printf("\r\n");
-			sys_thread_new("echod", echo_application_thread, 0,
+			sys_thread_new("listen", listen_thread, 0,
 					THREAD_STACKSIZE,
 					DEFAULT_THREAD_PRIO);
-			break;
-		}
-		mscnt += DHCP_FINE_TIMER_MSECS;
-		if (mscnt >= DHCP_COARSE_TIMER_SECS * 2000) {
-			xil_printf("ERROR: DHCP request timed out\r\n");
-			xil_printf("Configuring default IP of 192.168.1.10\r\n");
-			IP4_ADDR(&(server_netif.ip_addr),  192, 168, 1, 10);
-			IP4_ADDR(&(server_netif.netmask), 255, 255, 255,  0);
-			IP4_ADDR(&(server_netif.gw),  192, 168, 1, 1);
-			print_ip_settings(&(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
-			/* print all application headers */
-			xil_printf("\r\n");
-			xil_printf("%20s %6s %s\r\n", "Server", "Port", "Connect With..");
-			xil_printf("%20s %6s %s\r\n", "--------------------", "------", "--------------------");
 
-			print_echo_app_header();
-			xil_printf("\r\n");
-			sys_thread_new("echod", echo_application_thread, 0,
-					THREAD_STACKSIZE,
-					DEFAULT_THREAD_PRIO);
 			break;
 		}
+//		mscnt += DHCP_FINE_TIMER_MSECS;
+//		if (mscnt >= DHCP_COARSE_TIMER_SECS * 2000)
+//		{
+//			xil_printf("ERROR: DHCP request timed out\r\n");
+//			xil_printf("Configuring default IP of 192.168.1.10\r\n");
+//			IP4_ADDR(&(server_netif.ip_addr),  192, 168, 1, 10);
+//			IP4_ADDR(&(server_netif.netmask), 255, 255, 255,  0);
+//			IP4_ADDR(&(server_netif.gw),  192, 168, 1, 1);
+//			print_ip_settings(&(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
+//			/* print all application headers */
+//			xil_printf("\r\n");
+//			xil_printf("%20s %6s %s\r\n", "Server", "Port", "Connect With..");
+//			xil_printf("%20s %6s %s\r\n", "--------------------", "------", "--------------------");
+//
+//			//print_echo_app_header();
+//			xil_printf("\r\n");
+//			sys_thread_new("listen", listen_thread, 0,
+//					THREAD_STACKSIZE,
+//					DEFAULT_THREAD_PRIO);
+//
+//			break;
+//		}
 	}
 #endif
 #endif
