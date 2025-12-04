@@ -3437,3 +3437,705 @@ con
 ----------------End of Script----------------
 
 14:02:14 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:24:05 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:27:30 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:27:36 INFO  : Disconnected from the channel tcfchan#1.
+14:27:37 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:27:46 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+----------------End of Script----------------
+
+14:27:46 ERROR : Could not find ARM device on the board for connection 'Local'.
+Check if the target is in:
+1. Split JTAG - No operations are possible with ARM DAP.
+2. Non JTAG bootmode - Bootrom may need time to enable DAP.
+Please try again.
+
+
+Troubleshooting hints:
+1. Check whether board is connected to system properly.
+2. In case of zynq board, check whether Digilent/Xilinx cable switch settings are correct.
+3. If you are using Xilinx Platform Cable USB, ensure that status LED is green.
+14:27:56 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:27:56 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:27:56 INFO  : 'jtag frequency' command is executed.
+14:27:56 INFO  : Context for 'APU' is selected.
+14:27:56 INFO  : System reset is completed.
+14:27:59 INFO  : 'after 3000' command is executed.
+14:27:59 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:28:01 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:28:01 INFO  : Context for 'APU' is selected.
+14:28:03 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:28:03 INFO  : 'configparams force-mem-access 1' command is executed.
+14:28:03 INFO  : Context for 'APU' is selected.
+14:28:03 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:28:03 INFO  : 'ps7_init' command is executed.
+14:28:03 INFO  : 'ps7_post_config' command is executed.
+14:28:03 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:28:04 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:28:04 INFO  : 'configparams force-mem-access 0' command is executed.
+14:28:04 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:28:04 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:28:04 INFO  : 'con' command is executed.
+14:28:04 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:28:04 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:34:07 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:35:05 INFO  : Disconnected from the channel tcfchan#2.
+14:35:06 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:35:06 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:35:06 INFO  : 'jtag frequency' command is executed.
+14:35:06 INFO  : Context for 'APU' is selected.
+14:35:06 INFO  : System reset is completed.
+14:35:09 INFO  : 'after 3000' command is executed.
+14:35:09 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:35:12 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:35:12 INFO  : Context for 'APU' is selected.
+14:35:13 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:35:13 INFO  : 'configparams force-mem-access 1' command is executed.
+14:35:13 INFO  : Context for 'APU' is selected.
+14:35:14 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:35:14 INFO  : 'ps7_init' command is executed.
+14:35:14 INFO  : 'ps7_post_config' command is executed.
+14:35:14 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:35:14 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:35:14 INFO  : 'configparams force-mem-access 0' command is executed.
+14:35:14 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:35:14 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:35:14 INFO  : 'con' command is executed.
+14:35:14 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:35:14 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:46:40 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:46:45 INFO  : Disconnected from the channel tcfchan#3.
+14:46:46 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:46:46 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:46:46 INFO  : 'jtag frequency' command is executed.
+14:46:46 INFO  : Context for 'APU' is selected.
+14:46:46 INFO  : System reset is completed.
+14:46:49 INFO  : 'after 3000' command is executed.
+14:46:49 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:46:52 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:46:52 INFO  : Context for 'APU' is selected.
+14:46:54 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:46:54 INFO  : 'configparams force-mem-access 1' command is executed.
+14:46:54 INFO  : Context for 'APU' is selected.
+14:46:54 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:46:54 INFO  : 'ps7_init' command is executed.
+14:46:54 INFO  : 'ps7_post_config' command is executed.
+14:46:54 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:46:54 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:46:54 INFO  : 'configparams force-mem-access 0' command is executed.
+14:46:54 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:46:54 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:46:54 INFO  : 'con' command is executed.
+14:46:54 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:46:54 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:49:31 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:49:36 INFO  : Disconnected from the channel tcfchan#4.
+14:49:37 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:49:46 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+----------------End of Script----------------
+
+14:49:46 ERROR : Could not find Jtag device on the board for connection 'Local'.
+
+
+Troubleshooting hints:
+1. Check whether board is connected to system properly.
+2. In case of zynq board, check whether Digilent/Xilinx cable switch settings are correct.
+3. If you are using Xilinx Platform Cable USB, ensure that status LED is green.
+14:49:54 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:49:54 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:49:54 INFO  : 'jtag frequency' command is executed.
+14:49:54 INFO  : Context for 'APU' is selected.
+14:49:54 INFO  : System reset is completed.
+14:49:57 INFO  : 'after 3000' command is executed.
+14:49:57 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:49:59 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:49:59 INFO  : Context for 'APU' is selected.
+14:50:01 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:50:01 INFO  : 'configparams force-mem-access 1' command is executed.
+14:50:01 INFO  : Context for 'APU' is selected.
+14:50:01 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:50:01 INFO  : 'ps7_init' command is executed.
+14:50:01 INFO  : 'ps7_post_config' command is executed.
+14:50:01 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:50:02 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:50:02 INFO  : 'configparams force-mem-access 0' command is executed.
+14:50:02 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:50:02 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:50:02 INFO  : 'con' command is executed.
+14:50:02 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:50:02 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:51:50 INFO  : Disconnected from the channel tcfchan#5.
+14:51:51 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:51:51 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:51:51 INFO  : 'jtag frequency' command is executed.
+14:51:51 INFO  : Context for 'APU' is selected.
+14:51:51 INFO  : System reset is completed.
+14:51:54 INFO  : 'after 3000' command is executed.
+14:51:54 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:51:56 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:51:56 INFO  : Context for 'APU' is selected.
+14:51:58 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:51:58 INFO  : 'configparams force-mem-access 1' command is executed.
+14:51:58 INFO  : Context for 'APU' is selected.
+14:51:58 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:51:58 INFO  : 'ps7_init' command is executed.
+14:51:58 INFO  : 'ps7_post_config' command is executed.
+14:51:58 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:51:59 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:51:59 INFO  : 'configparams force-mem-access 0' command is executed.
+14:51:59 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:51:59 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:51:59 INFO  : 'con' command is executed.
+14:51:59 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:51:59 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:56:14 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+14:56:18 INFO  : Disconnected from the channel tcfchan#6.
+14:56:19 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:56:19 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:56:19 INFO  : 'jtag frequency' command is executed.
+14:56:19 INFO  : Context for 'APU' is selected.
+14:56:20 INFO  : System reset is completed.
+14:56:23 INFO  : 'after 3000' command is executed.
+14:56:23 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:56:25 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:56:25 INFO  : Context for 'APU' is selected.
+14:56:27 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:56:27 INFO  : 'configparams force-mem-access 1' command is executed.
+14:56:27 INFO  : Context for 'APU' is selected.
+14:56:27 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:56:27 INFO  : 'ps7_init' command is executed.
+14:56:27 INFO  : 'ps7_post_config' command is executed.
+14:56:27 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:56:27 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:56:28 INFO  : 'configparams force-mem-access 0' command is executed.
+14:56:28 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:56:28 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:56:28 INFO  : 'con' command is executed.
+14:56:28 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:56:28 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+14:58:20 INFO  : Disconnected from the channel tcfchan#7.
+14:58:21 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+14:58:21 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+14:58:21 INFO  : 'jtag frequency' command is executed.
+14:58:21 INFO  : Context for 'APU' is selected.
+14:58:21 INFO  : System reset is completed.
+14:58:24 INFO  : 'after 3000' command is executed.
+14:58:24 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+14:58:26 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+14:58:26 INFO  : Context for 'APU' is selected.
+14:58:28 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+14:58:28 INFO  : 'configparams force-mem-access 1' command is executed.
+14:58:28 INFO  : Context for 'APU' is selected.
+14:58:28 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+14:58:28 INFO  : 'ps7_init' command is executed.
+14:58:28 INFO  : 'ps7_post_config' command is executed.
+14:58:28 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:58:29 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+14:58:29 INFO  : 'configparams force-mem-access 0' command is executed.
+14:58:29 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+14:58:29 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+14:58:29 INFO  : 'con' command is executed.
+14:58:29 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+14:58:29 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+15:00:17 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+15:21:32 INFO  : Disconnected from the channel tcfchan#8.
+15:21:33 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+15:21:33 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+15:21:33 INFO  : 'jtag frequency' command is executed.
+15:21:33 INFO  : Context for 'APU' is selected.
+15:21:33 INFO  : System reset is completed.
+15:21:36 INFO  : 'after 3000' command is executed.
+15:21:36 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+15:21:39 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+15:21:39 INFO  : Context for 'APU' is selected.
+15:21:40 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+15:21:40 INFO  : 'configparams force-mem-access 1' command is executed.
+15:21:40 INFO  : Context for 'APU' is selected.
+15:21:40 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+15:21:41 INFO  : 'ps7_init' command is executed.
+15:21:41 INFO  : 'ps7_post_config' command is executed.
+15:21:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:21:41 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+15:21:41 INFO  : 'configparams force-mem-access 0' command is executed.
+15:21:41 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+15:21:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:21:41 INFO  : 'con' command is executed.
+15:21:41 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+15:21:41 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+15:55:40 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+15:56:04 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+15:57:36 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+15:57:41 INFO  : Disconnected from the channel tcfchan#9.
+15:57:42 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+15:57:42 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+15:57:42 INFO  : 'jtag frequency' command is executed.
+15:57:42 INFO  : Context for 'APU' is selected.
+15:57:42 INFO  : System reset is completed.
+15:57:45 INFO  : 'after 3000' command is executed.
+15:57:45 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+15:57:47 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+15:57:47 INFO  : Context for 'APU' is selected.
+15:57:49 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+15:57:49 INFO  : 'configparams force-mem-access 1' command is executed.
+15:57:49 INFO  : Context for 'APU' is selected.
+15:57:49 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+15:57:50 INFO  : 'ps7_init' command is executed.
+15:57:50 INFO  : 'ps7_post_config' command is executed.
+15:57:50 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:57:50 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+15:57:50 INFO  : 'configparams force-mem-access 0' command is executed.
+15:57:50 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+15:57:50 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:57:50 INFO  : 'con' command is executed.
+15:57:50 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+15:57:50 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+15:58:12 INFO  : Disconnected from the channel tcfchan#10.
+15:58:13 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+15:58:13 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+15:58:13 INFO  : 'jtag frequency' command is executed.
+15:58:13 INFO  : Context for 'APU' is selected.
+15:58:13 INFO  : System reset is completed.
+15:58:16 INFO  : 'after 3000' command is executed.
+15:58:16 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+15:58:19 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+15:58:19 INFO  : Context for 'APU' is selected.
+15:58:21 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+15:58:21 INFO  : 'configparams force-mem-access 1' command is executed.
+15:58:21 INFO  : Context for 'APU' is selected.
+15:58:21 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+15:58:21 INFO  : 'ps7_init' command is executed.
+15:58:21 INFO  : 'ps7_post_config' command is executed.
+15:58:21 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:58:21 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+15:58:21 INFO  : 'configparams force-mem-access 0' command is executed.
+15:58:21 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+15:58:22 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+15:58:22 INFO  : 'con' command is executed.
+15:58:22 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+15:58:22 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+16:01:57 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+16:02:07 INFO  : Disconnected from the channel tcfchan#11.
+16:02:08 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+16:02:17 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+----------------End of Script----------------
+
+16:02:17 ERROR : Could not find ARM device on the board for connection 'Local'.
+Check if the target is in:
+1. Split JTAG - No operations are possible with ARM DAP.
+2. Non JTAG bootmode - Bootrom may need time to enable DAP.
+Please try again.
+
+
+Troubleshooting hints:
+1. Check whether board is connected to system properly.
+2. In case of zynq board, check whether Digilent/Xilinx cable switch settings are correct.
+3. If you are using Xilinx Platform Cable USB, ensure that status LED is green.
+16:02:33 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+16:02:33 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+16:02:33 INFO  : 'jtag frequency' command is executed.
+16:02:33 INFO  : Context for 'APU' is selected.
+16:02:33 INFO  : System reset is completed.
+16:02:36 INFO  : 'after 3000' command is executed.
+16:02:36 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+16:02:38 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+16:02:38 INFO  : Context for 'APU' is selected.
+16:02:40 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+16:02:40 INFO  : 'configparams force-mem-access 1' command is executed.
+16:02:40 INFO  : Context for 'APU' is selected.
+16:02:40 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+16:02:40 INFO  : 'ps7_init' command is executed.
+16:02:40 INFO  : 'ps7_post_config' command is executed.
+16:02:40 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:02:41 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+16:02:41 INFO  : 'configparams force-mem-access 0' command is executed.
+16:02:41 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+16:02:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:02:41 INFO  : 'con' command is executed.
+16:02:41 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+16:02:41 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+16:04:35 INFO  : Disconnected from the channel tcfchan#12.
+16:04:36 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+16:04:36 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+16:04:36 INFO  : 'jtag frequency' command is executed.
+16:04:36 INFO  : Context for 'APU' is selected.
+16:04:36 INFO  : System reset is completed.
+16:04:39 INFO  : 'after 3000' command is executed.
+16:04:39 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+16:04:41 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+16:04:41 INFO  : Context for 'APU' is selected.
+16:04:43 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+16:04:43 INFO  : 'configparams force-mem-access 1' command is executed.
+16:04:43 INFO  : Context for 'APU' is selected.
+16:04:43 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+16:04:43 INFO  : 'ps7_init' command is executed.
+16:04:43 INFO  : 'ps7_post_config' command is executed.
+16:04:43 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:04:44 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+16:04:44 INFO  : 'configparams force-mem-access 0' command is executed.
+16:04:44 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+16:04:44 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:04:44 INFO  : 'con' command is executed.
+16:04:44 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+16:04:44 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+16:05:07 INFO  : Disconnected from the channel tcfchan#13.
+16:05:08 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+16:05:08 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+16:05:08 INFO  : 'jtag frequency' command is executed.
+16:05:08 INFO  : Context for 'APU' is selected.
+16:05:08 INFO  : System reset is completed.
+16:05:11 INFO  : 'after 3000' command is executed.
+16:05:11 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+16:05:14 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+16:05:14 INFO  : Context for 'APU' is selected.
+16:05:16 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+16:05:16 INFO  : 'configparams force-mem-access 1' command is executed.
+16:05:16 INFO  : Context for 'APU' is selected.
+16:05:16 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+16:05:16 INFO  : 'ps7_init' command is executed.
+16:05:16 INFO  : 'ps7_post_config' command is executed.
+16:05:16 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:05:16 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+16:05:16 INFO  : 'configparams force-mem-access 0' command is executed.
+16:05:16 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+16:05:16 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:05:16 INFO  : 'con' command is executed.
+16:05:16 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+16:05:16 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+16:05:48 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+16:05:51 INFO  : Disconnected from the channel tcfchan#14.
+16:05:52 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+16:05:52 INFO  : Jtag cable 'Xilinx HW-FTDI-TEST FT2232H 1234-tulA' is selected.
+16:05:52 INFO  : 'jtag frequency' command is executed.
+16:05:52 INFO  : Context for 'APU' is selected.
+16:05:53 INFO  : System reset is completed.
+16:05:56 INFO  : 'after 3000' command is executed.
+16:05:56 INFO  : 'targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}' command is executed.
+16:05:58 INFO  : Device configured successfully with "C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit"
+16:05:58 INFO  : Context for 'APU' is selected.
+16:06:00 INFO  : Hardware design and registers information is loaded from 'C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa'.
+16:06:00 INFO  : 'configparams force-mem-access 1' command is executed.
+16:06:00 INFO  : Context for 'APU' is selected.
+16:06:00 INFO  : Sourcing of 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl' is done.
+16:06:00 INFO  : 'ps7_init' command is executed.
+16:06:00 INFO  : 'ps7_post_config' command is executed.
+16:06:00 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:06:01 INFO  : The application 'C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf' is downloaded to processor 'ps7_cortexa9_0'.
+16:06:01 INFO  : 'configparams force-mem-access 0' command is executed.
+16:06:01 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -nocase -filter {name =~"APU*"}
+rst -system
+after 3000
+targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
+fpga -file C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/bitstream/UDP.bit
+targets -set -nocase -filter {name =~"APU*"}
+loadhw -hw C:/DevWorks/UDP/Vitis_tcp/UDP/export/UDP/hw/UDP.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*"}
+source C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/_ide/psinit/ps7_init.tcl
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "*A9*#0"}
+dow C:/DevWorks/UDP/Vitis_tcp/TCP_Stream_App/Debug/TCP_Stream_App.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+16:06:01 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+16:06:01 INFO  : 'con' command is executed.
+16:06:01 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*A9*#0"}
+con
+----------------End of Script----------------
+
+16:06:01 INFO  : Launch script is exported to file 'C:\DevWorks\UDP\Vitis_tcp\TCP_Stream_App_system\_ide\scripts\debugger_tcp_stream_app-default.tcl'
+16:14:17 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...
+16:14:34 INFO  : Checking for BSP changes to sync application flags for project 'TCP_Stream_App'...

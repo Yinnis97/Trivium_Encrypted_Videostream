@@ -15,11 +15,12 @@ void listen_thread(void *);
 void lwip_init();
 
 // DHCP
-#if LWIP_DHCP==1
-extern volatile int dhcp_timoutcntr;
-err_t dhcp_start(struct netif *netif);
+#if LWIP_IPV6==0
+	#if LWIP_DHCP==1
+	extern volatile int dhcp_timoutcntr;
+	err_t dhcp_start(struct netif *netif);
+	#endif
 #endif
-
 
 // Thread Stack Size
 #define THREAD_STACKSIZE 1024

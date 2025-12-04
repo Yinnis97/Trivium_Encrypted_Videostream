@@ -154,8 +154,6 @@ void Recv_Thread(void *p)
 			else if (n == 0)
 			{
 				xil_printf("%s: connection closed by client\r\n", __FUNCTION__);
-				close(sd);
-				vTaskDelete(NULL);
 			}
 
 			total_received += n;
@@ -167,6 +165,10 @@ void Recv_Thread(void *p)
 			Send_Data = true;
 			xSemaphoreGive(buffer_mutex);
 		}
+
+		/* break if client closed connection */
+		if (n <= 0)
+			break;
 	}
 
 	/* close connection */

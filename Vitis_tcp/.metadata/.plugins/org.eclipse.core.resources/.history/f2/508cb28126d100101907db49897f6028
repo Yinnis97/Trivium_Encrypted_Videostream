@@ -167,6 +167,10 @@ void Recv_Thread(void *p)
 			Send_Data = true;
 			xSemaphoreGive(buffer_mutex);
 		}
+
+		/* break if client closed connection */
+		if (n <= 0)
+			break;
 	}
 
 	/* close connection */

@@ -15,11 +15,12 @@ void listen_thread(void *);
 void lwip_init();
 
 // DHCP
-#if LWIP_DHCP==1
-extern volatile int dhcp_timoutcntr;
-err_t dhcp_start(struct netif *netif);
+#if LWIP_IPV6==0
+	#if LWIP_DHCP==1
+	extern volatile int dhcp_timoutcntr;
+	err_t dhcp_start(struct netif *netif);
+	#endif
 #endif
-
 
 // Thread Stack Size
 #define THREAD_STACKSIZE 1024
@@ -114,6 +115,10 @@ void network_thread(void *p)
 
 int main_thread()
 {
+#if LWIP_DHCP==1
+	int mscnt = 0;
+#endif
+
 	/* initialize lwIP before calling sys_thread_new */
     lwip_init();
 
@@ -122,6 +127,8 @@ int main_thread()
 		THREAD_STACKSIZE,
             DEFAULT_THREAD_PRIO);
 
+#if LWIP_IPV6==0
+#if LWIP_DHCP==1
     while (1)
     {
 	vTaskDelay(DHCP_FINE_TIMER_MSECS / portTICK_RATE_MS);
@@ -135,7 +142,31 @@ int main_thread()
 
 			break;
 		}
+//		mscnt += DHCP_FINE_TIMER_MSECS;
+//		if (mscnt >= DHCP_COARSE_TIMER_SECS * 2000)
+//		{
+//			xil_printf("ERROR: DHCP request timed out\r\n");
+//			xil_printf("Configuring default IP of 192.168.1.10\r\n");
+//			IP4_ADDR(&(server_netif.ip_addr),  192, 168, 1, 10);
+//			IP4_ADDR(&(server_netif.netmask), 255, 255, 255,  0);
+//			IP4_ADDR(&(server_netif.gw),  192, 168, 1, 1);
+//			print_ip_settings(&(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
+//			/* print all application headers */
+//			xil_printf("\r\n");
+//			xil_printf("%20s %6s %s\r\n", "Server", "Port", "Connect With..");
+//			xil_printf("%20s %6s %s\r\n", "--------------------", "------", "--------------------");
+//
+//			//print_echo_app_header();
+//			xil_printf("\r\n");
+//			sys_thread_new("listen", listen_thread, 0,
+//					THREAD_STACKSIZE,
+//					DEFAULT_THREAD_PRIO);
+//
+//			break;
+//		}
 	}
+#endif
+#endif
     vTaskDelete(NULL);
     return 0;
 }
